@@ -14,25 +14,29 @@ export default async (req: NowRequest, res: NowResponse) => {
     "LEFT JOIN rendezvous r on r.coordinator = c.phone " +
     "WHERE u.phone = ? ", [phone])
 
-    let row = rows[0]
-    row.me = {}
-    row.coordinator = {}
-    row.rendezvous = {}
-    row.me.status = row.status
-    row.me.location = row.location
-    row.coordinator.phone = row.coordinator_phone
-    row.coordinator.name = row.coordinator_name
-    row.coordinator.location = row.coordinator_location
-    row.rendezvous.lat = row.r_lat
-    row.rendezvous.lng = row.r_lng
-    delete row.status
-    delete row.location
-    delete row.coordinator_phone
-    delete row.coordinator_name
-    delete row.coordinator_location
-    delete row.r_lat
-    delete row.r_lng
+    if (rows && rows[0]) {
+      let row = rows[0]
+      row.me = {}
+      row.coordinator = {}
+      row.rendezvous = {}
+      row.me.status = row.status
+      row.me.location = row.location
+      row.coordinator.phone = row.coordinator_phone
+      row.coordinator.name = row.coordinator_name
+      row.coordinator.location = row.coordinator_location
+      row.rendezvous.lat = row.r_lat
+      row.rendezvous.lng = row.r_lng
+      delete row.status
+      delete row.location
+      delete row.coordinator_phone
+      delete row.coordinator_name
+      delete row.coordinator_location
+      delete row.r_lat
+      delete row.r_lng
 
-  res.status(200).json(row)
+      res.status(200).json(row)
 
+    } else {
+      res.status(404).json({})
+    }
 };

@@ -22,8 +22,7 @@ create table emergencies
     id          int primary key auto_increment,
     coordinator VARCHAR(255),
     startDt     datetime default now(),
-    endDt       datetime,
-    active      boolean  default true
+    endDt       datetime
 );
 
 create table rendezvous
@@ -33,15 +32,3 @@ create table rendezvous
     lat         DOUBLE,
     lng         DOUBLE
 );
-
-SELECT now()      as datetime,
-       u.status,
-       u.location,
-       c.phone    as coordinator_phone,
-       c.name     as coordinator_name,
-       c.location as coordinator_location,
-       r.lat as r_lat, r.lng as r_lng
-FROM users u
-         LEFT JOIN users c ON u.coordinator = c.phone
-         LEFT JOIN rendezvous r on r.coordinator = c.phone
-WHERE u.phone = '3035559876'
