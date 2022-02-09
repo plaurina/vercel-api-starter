@@ -7,8 +7,9 @@ export default async (req: NowRequest, res: NowResponse) => {
   const {phone} = req.query;
   console.log("getStatuses, phone = {}", phone)
   let queryStr = "SELECT" +
-    " phone, name, status, location " +
-    " FROM users where coordinator = ?" +
+    " u.phone as phone, u.name as name, u.status as status, u.location as location, r.lat as lat, r.lng as lng " +
+    " FROM users u where u.coordinator = ? " +
+    " LEFT JOIN rendezvous r on r.coordinator = u.coordinator " +
     " AND iscoordinator = false";
   console.log("queryStr = {}", queryStr)
   const [rows, fields] = await conn.query(queryStr, [phone])
@@ -24,6 +25,10 @@ export default async (req: NowRequest, res: NowResponse) => {
         name: row.name,
         status: row.status,
         location: row.location,
+        rendezvous: {
+          lat: row.lat,
+          lng: row.lng
+        }
       }
     })
 
