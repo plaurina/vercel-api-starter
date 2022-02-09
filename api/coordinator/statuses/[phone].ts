@@ -9,7 +9,6 @@ export default async (req: NowRequest, res: NowResponse) => {
   let queryStr = "SELECT" +
     " u.phone as phone, u.name as name, u.status as status, u.location as location, r.lat as lat, r.lng as lng " +
     " FROM users u " +
-    " LEFT JOIN rendezvous r on r.coordinator = u.coordinator " +
     " WHERE u.coordinator = ? AND u.iscoordinator = false";
   console.log("queryStr = {}", queryStr)
   const [rows, fields] = await conn.query(queryStr, [phone])
@@ -25,10 +24,6 @@ export default async (req: NowRequest, res: NowResponse) => {
         name: row.name,
         status: row.status,
         location: row.location,
-        rendezvous: {
-          lat: row.lat,
-          lng: row.lng
-        }
       }
     })
 
@@ -38,9 +33,16 @@ export default async (req: NowRequest, res: NowResponse) => {
       row.comments = comments
     }
 
+    const [ren] = await conn.query("SELECT lat, lng FROM rendezvous WHERE coordinator = ?", [phone])
+    let rendezvous = {
+      lat: ren[0].lat,
+      lng: ren[0].lng
+    }
+
     res.status(200).json(
       {
         phone: phone,
+        rendezvous: rendezvous,
         users: rows,
       });
 
