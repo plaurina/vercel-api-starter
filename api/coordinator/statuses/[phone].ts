@@ -7,7 +7,7 @@ export default async (req: NowRequest, res: NowResponse) => {
   const {phone} = req.query;
   console.log("getStatuses, phone = {}", phone)
   let queryStr = "SELECT" +
-    " u.phone as phone, u.name as name, u.status as status, u.location as location, r.lat as lat, r.lng as lng " +
+    " u.phone as phone, u.name as name, u.status as status, u.location as location " +
     " FROM users u " +
     " WHERE u.coordinator = ? AND u.iscoordinator = false";
   console.log("queryStr = {}", queryStr)
