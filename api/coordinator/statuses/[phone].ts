@@ -8,9 +8,9 @@ export default async (req: NowRequest, res: NowResponse) => {
   console.log("getStatuses, phone = {}", phone)
   let queryStr = "SELECT" +
     " u.phone as phone, u.name as name, u.status as status, u.location as location, r.lat as lat, r.lng as lng " +
-    " FROM users u where u.coordinator = ? " +
+    " FROM users u " +
     " LEFT JOIN rendezvous r on r.coordinator = u.coordinator " +
-    " AND iscoordinator = false";
+    " WHERE u.coordinator = ? AND u.iscoordinator = false";
   console.log("queryStr = {}", queryStr)
   const [rows, fields] = await conn.query(queryStr, [phone])
 
